@@ -76,17 +76,6 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
         receiver.setListener(this);
         //GiphyIntentService.startActionFetch(this, receiver, "silicon+valley", 20);
 
-        int emo = detectEmotion("Sickening. It was terrible.");
-        String emot = "";
-        if (emo == Emotion.ANGER) emot = "angry";
-        else if (emo == Emotion.DISGUST) emot = "disgust";
-        else if (emo == Emotion.FEAR) emot = "fear";
-        else if (emo == Emotion.HAPPINESS) emot = "happy";
-        else if (emo == Emotion.NEUTRAL) emot = "ok";
-        else if (emo == Emotion.SADNESS) emot = "sad";
-        else if (emo == Emotion.SURPRISE) emot = "wow";
-
-        Log.d(TAG, "Emotion: "+emot);
     }
 
     @Override
@@ -104,16 +93,5 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
         }
     }
 
-    private int detectEmotion(String text) {
-        EmotionalState state = null;
 
-        try {
-            Empathyscope scope = Empathyscope.getInstance();
-            state= scope.feel(text);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return state.getStrongestEmotion().getType();
-    }
 }
