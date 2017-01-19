@@ -2,6 +2,7 @@ package kienme.react;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.widget.GridView;
 import java.util.ArrayList;
 
 import kienme.react.giphy.GiphyIntentService;
+import kienme.react.giphy.GiphyServiceReceiver;
 
 /**
  * An activity representing a list of Gifs. This activity
@@ -21,7 +23,7 @@ import kienme.react.giphy.GiphyIntentService;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class GifListActivity extends AppCompatActivity {
+public class GifListActivity extends AppCompatActivity implements GiphyServiceReceiver.Listener{
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -29,7 +31,6 @@ public class GifListActivity extends AppCompatActivity {
      */
     static boolean mTwoPane;
 
-    ArrayList<GifGridItem> gridData;
     GifGridViewAdapter gifGridViewAdapter;
     GridView gridView;
     static Context context;
@@ -53,7 +54,6 @@ public class GifListActivity extends AppCompatActivity {
         });
 
         context = this;
-        gridData = new ArrayList<>();
         gridView = (GridView) findViewById(R.id.gif_list);
         //gridView.setColumnWidth(calcImageSize());
 
@@ -65,23 +65,23 @@ public class GifListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        //data here
-        gridData.add(new GifGridItem("http://www.gifs.net/Animation11/Animals/Cats/black_and_white.gif"));
-        gridData.add(new GifGridItem("http://www.gifs.net/Animation11/Animals/Cats/black_and_white.gif"));
-        gridData.add(new GifGridItem("http://www.gifs.net/Animation11/Animals/Cats/black_and_white.gif"));
-        gridData.add(new GifGridItem("http://www.gifs.net/Animation11/Animals/Cats/black_and_white.gif"));
-        gridData.add(new GifGridItem("http://www.gifs.net/Animation11/Animals/Cats/black_and_white.gif"));
-        gridData.add(new GifGridItem("http://www.gifs.net/Animation11/Animals/Cats/black_and_white.gif"));
-        gridData.add(new GifGridItem("http://www.gifs.net/Animation11/Animals/Cats/black_and_white.gif"));
-        gridData.add(new GifGridItem("http://www.gifs.net/Animation11/Animals/Cats/black_and_white.gif"));
-        gridData.add(new GifGridItem("http://www.gifs.net/Animation11/Animals/Cats/black_and_white.gif"));
-        gridData.add(new GifGridItem("http://www.gifs.net/Animation11/Animals/Cats/black_and_white.gif"));
+        GiphyServiceReceiver receiver = new GiphyServiceReceiver(new Handler());
+        receiver.setListener(this);
+        GiphyIntentService.startActionFetch(this, receiver, "silicon+valley", 10);
+    }
 
+    @Override
+    public void onReceiveResult(int resultCode, Bundle resultData) {
+        if(resultCode == GiphyIntentService.RESULT_SUCCESS) {
+            ArrayList<GifGridItem> gridData = new ArrayList<>();
+            ArrayList<String> gifsList = resultData.getStringArrayList(GiphyServiceReceiver.GIFS_LIST_KEY);
 
-        gifGridViewAdapter = new GifGridViewAdapter(this, R.layout.gif_list_content, gridData, getSupportFragmentManager());
-        gifGridViewAdapter.setGridData(gridData);
-        gridView.setAdapter(gifGridViewAdapter);
+            for (String gif : gifsList)
+                gridData.add(new GifGridItem(gif));
 
-        GiphyIntentService.startActionFetch(this, "silicon+valley", 10);
+            gifGridViewAdapter = new GifGridViewAdapter(this, R.layout.gif_list_content, gridData, getSupportFragmentManager());
+            gifGridViewAdapter.setGridData(gridData);
+            gridView.setAdapter(gifGridViewAdapter);
+        }
     }
 }

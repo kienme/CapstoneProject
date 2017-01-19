@@ -3,6 +3,8 @@ package kienme.react.giphy;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -10,6 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -21,6 +24,12 @@ public class GiphyIntentService extends IntentService {
     private static final String NUM_RESULTS = "kienme.react.giphy.extra.NUM_RESULTS";
 
     private final String BASE_URL = "http://api.giphy.com/v1/gifs/random?";
+
+    public static String RESULTS_LIST_KEY = "results";
+    public static String RECEIVER_KEY = "receiver";
+    public static int RESULT_SUCCESS = 0;
+
+    static ResultReceiver receiver;
 
     //Replace the below with appropriate calls to obtain api key
     //Since current key is public, it is hardcoded here
@@ -39,7 +48,8 @@ public class GiphyIntentService extends IntentService {
      * @see IntentService
      */
 
-    public static void startActionFetch(Context context, String keywords, int numResults) {
+    public static void startActionFetch(Context context, ResultReceiver resultReceiver, String keywords, int numResults) {
+        receiver = resultReceiver;
         Intent intent = new Intent(context, GiphyIntentService.class);
         intent.setAction(ACTION_FETCH);
         intent.putExtra(KEYWORDS, keywords);
@@ -65,6 +75,8 @@ public class GiphyIntentService extends IntentService {
      */
     private void handleActionFetch(String keywords, int numResults) {
 
+        ArrayList<String> resultsList = new ArrayList<>();
+
         for(int i = 0; i < numResults; ++i) {
             StringBuilder data = new StringBuilder("");
             try {
@@ -87,6 +99,8 @@ public class GiphyIntentService extends IntentService {
                 if (inputStream != null) {
                     inputStream.close();
                     //parseResult(data.toString());
+                    resultsList.add(data.toString());
+
                     Log.d(TAG, "Input stream not null");
                 } else Log.d(TAG, "Input stream IS null");
 
@@ -94,5 +108,9 @@ public class GiphyIntentService extends IntentService {
                 e.printStackTrace();
             }
         }
+
+        Bundle bundleToSend = new Bundle();
+        bundleToSend.putStringArrayList(RESULTS_LIST_KEY, resultsList);
+        receiver.send(RESULT_SUCCESS, bundleToSend);
     }
 }
