@@ -1,0 +1,20 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".GifListActivity">
+    <item
+        android:id="@+id/direct_check"
+        android:title="Direct search"
+        android:checkable="true"
+        android:checked="true"/>
+    <group
+        android:id="@+id/menu_group"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/favourites"
+            android:title="Favourites"
+            app:showAsAction="never"
+            android:checkable="false"/>
+    </group>
+</menu>

@@ -1,6 +1,7 @@
 package kienme.react;
 
 import android.content.Context;
+import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -8,14 +9,22 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import kienme.react.giphy.GiphyIntentService;
 import kienme.react.giphy.GiphyServiceReceiver;
+import kienme.react.synesketch.EmotionDetector;
 import synesketch.emotion.Emotion;
 import synesketch.emotion.EmotionalState;
 import synesketch.emotion.Empathyscope;
@@ -36,6 +45,8 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
      */
     static boolean mTwoPane;
 
+    boolean directSearch = true;
+
     GifGridViewAdapter gifGridViewAdapter;
     GridView gridView;
     static Context context;
@@ -46,6 +57,12 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gif_list);
+
+        context = this;
+        gridView = (GridView) findViewById(R.id.gif_list);
+
+        final GiphyServiceReceiver receiver = new GiphyServiceReceiver(new Handler());
+        receiver.setListener(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -60,8 +77,25 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
             }
         });
 
-        context = this;
-        gridView = (GridView) findViewById(R.id.gif_list);
+        final EditText searchBar = (EditText) findViewById(R.id.search_bar);
+        ImageButton searchButton = (ImageButton) findViewById(R.id.seach_btn);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String text = searchBar.getText().toString();
+                if (text.length() != 0) {
+                    String searchTerm = "";
+
+                    if(directSearch)
+                        searchTerm = text.replace(" ", "+");
+                    else
+                        searchTerm = EmotionDetector.getEmotionKeyword(text);
+
+                    GiphyIntentService.startActionFetch(context, receiver, searchTerm, 20);
+                }
+            }
+        });
+
         //gridView.setColumnWidth(calcImageSize());
 
         if (findViewById(R.id.gif_detail_container) != null) {
@@ -72,10 +106,8 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
             mTwoPane = true;
         }
 
-        GiphyServiceReceiver receiver = new GiphyServiceReceiver(new Handler());
-        receiver.setListener(this);
-        //GiphyIntentService.startActionFetch(this, receiver, "silicon+valley", 20);
 
+        //GiphyIntentService.startActionFetch(this, receiver, "silicon+valley", 20);
     }
 
     @Override
@@ -93,5 +125,19 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.direct_check:
+                item.setChecked(directSearch = !item.isChecked());
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
