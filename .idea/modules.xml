@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ReacT.iml" filepath="$PROJECT_DIR$/ReacT.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Synesketch/Synesketch.iml" filepath="$PROJECT_DIR$/Synesketch/Synesketch.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

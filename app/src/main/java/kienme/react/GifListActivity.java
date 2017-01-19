@@ -7,13 +7,18 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import kienme.react.giphy.GiphyIntentService;
 import kienme.react.giphy.GiphyServiceReceiver;
+import synesketch.emotion.Emotion;
+import synesketch.emotion.EmotionalState;
+import synesketch.emotion.Empathyscope;
 
 /**
  * An activity representing a list of Gifs. This activity
@@ -34,6 +39,8 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
     GifGridViewAdapter gifGridViewAdapter;
     GridView gridView;
     static Context context;
+
+    String TAG = "GifListActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +74,19 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
 
         GiphyServiceReceiver receiver = new GiphyServiceReceiver(new Handler());
         receiver.setListener(this);
-        GiphyIntentService.startActionFetch(this, receiver, "silicon+valley", 10);
+        //GiphyIntentService.startActionFetch(this, receiver, "silicon+valley", 20);
+
+        int emo = detectEmotion("Sickening. It was terrible.");
+        String emot = "";
+        if (emo == Emotion.ANGER) emot = "angry";
+        else if (emo == Emotion.DISGUST) emot = "disgust";
+        else if (emo == Emotion.FEAR) emot = "fear";
+        else if (emo == Emotion.HAPPINESS) emot = "happy";
+        else if (emo == Emotion.NEUTRAL) emot = "ok";
+        else if (emo == Emotion.SADNESS) emot = "sad";
+        else if (emo == Emotion.SURPRISE) emot = "wow";
+
+        Log.d(TAG, "Emotion: "+emot);
     }
 
     @Override
@@ -83,5 +102,18 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
             gifGridViewAdapter.setGridData(gridData);
             gridView.setAdapter(gifGridViewAdapter);
         }
+    }
+
+    private int detectEmotion(String text) {
+        EmotionalState state = null;
+
+        try {
+            Empathyscope scope = Empathyscope.getInstance();
+            state= scope.feel(text);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return state.getStrongestEmotion().getType();
     }
 }
