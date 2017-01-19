@@ -11,6 +11,8 @@ import android.widget.GridView;
 
 import java.util.ArrayList;
 
+import kienme.react.giphy.GiphyIntentService;
+
 /**
  * An activity representing a list of Gifs. This activity
  * has different presentations for handset and tablet-size devices. On
@@ -79,5 +81,7 @@ public class GifListActivity extends AppCompatActivity {
         gifGridViewAdapter = new GifGridViewAdapter(this, R.layout.gif_list_content, gridData, getSupportFragmentManager());
         gifGridViewAdapter.setGridData(gridData);
         gridView.setAdapter(gifGridViewAdapter);
+
+        GiphyIntentService.startActionFetch(this, "silicon+valley", 10);
     }
 }

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="kienme.react">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -29,6 +29,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="kienme.react.GifListActivity" />
         </activity>
+
+        <service
+            android:name=".giphy.GiphyIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

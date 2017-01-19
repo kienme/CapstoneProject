@@ -1,16 +1,12 @@
 package kienme.react;
 
 import android.app.Activity;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import kienme.react.dummy.DummyContent;
-
 /**
  * A fragment representing a single Gif detail screen.
  * This fragment is either contained in a {@link GifListActivity}
