@@ -1,6 +1,9 @@
 package kienme.react;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +13,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import kienme.react.content.DBHelper;
+import kienme.react.content.FavouritesProvider;
 
 /**
  * An activity representing a single Gif detail screen. This
@@ -30,8 +37,7 @@ public class GifDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                addFavourite();
             }
         });
 
@@ -75,5 +81,14 @@ public class GifDetailActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    void addFavourite() {
+        ContentValues values = new ContentValues();
+        values.put(DBHelper.COL_TITLE, getIntent().getStringExtra("title"));
+        values.put(DBHelper.COL_URL, getIntent().getStringExtra("image"));
+
+        Uri uri = getContentResolver().insert(FavouritesProvider.CONTENT_URI, values);
+        Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_SHORT).show();
     }
 }

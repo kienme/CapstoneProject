@@ -21,7 +21,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final int DB_VERSION = 1;
 
     private static final String CREATE_DB = "CREATE TABLE " + TBL_NAME +
-            " (" + COL_ID + "INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            " (" + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COL_TITLE + " TEXT, " + COL_URL + " TEXT);";
 
     public DBHelper(Context context) {

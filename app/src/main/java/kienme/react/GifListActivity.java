@@ -1,10 +1,15 @@
 package kienme.react;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -13,9 +18,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import kienme.react.content.DBHelper;
+import kienme.react.content.FavouritesProvider;
 import kienme.react.giphy.GiphyIntentService;
 import kienme.react.giphy.GiphyServiceReceiver;
 import kienme.react.synesketch.EmotionDetector;
@@ -28,7 +36,8 @@ import kienme.react.synesketch.EmotionDetector;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class GifListActivity extends AppCompatActivity implements GiphyServiceReceiver.Listener{
+public class GifListActivity extends AppCompatActivity
+        implements GiphyServiceReceiver.Listener, LoaderManager.LoaderCallbacks<Cursor>{
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -43,6 +52,8 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
     static Context context;
 
     String searchTerm = "";
+
+    private static final int LOADER_ID = 33;
 
     String TAG = "GifListActivity";
 
@@ -132,8 +143,39 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
                 return true;
 
             case R.id.favourites:
+                onFavTabSelected();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onFavTabSelected() {
+        Toast.makeText(getBaseContext(), "Favs yo", Toast.LENGTH_SHORT).show();
+        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(this, FavouritesProvider.CONTENT_URI, new String[]{DBHelper.COL_URL}, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        ArrayList<GifGridItem> favGifs = new ArrayList<>();
+        data.moveToFirst();
+        while (!data.isAfterLast()) {
+            favGifs.add(new GifGridItem(data.getString(0), "Favourite"));
+            data.moveToNext();
+        }
+
+        if(gifGridViewAdapter == null)
+            gifGridViewAdapter = new GifGridViewAdapter(this, R.layout.gif_list_content, favGifs, getSupportFragmentManager());
+            gifGridViewAdapter.setGridData(favGifs);
+            gridView.setAdapter(gifGridViewAdapter);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 }
