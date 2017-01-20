@@ -6,13 +6,16 @@ package kienme.react;
  */
 
 public class GifGridItem {
+    long id;
     String image;
+    String title;
 
     public GifGridItem() {
     }
 
-    public GifGridItem(String image) {
+    public GifGridItem(String image, String title) {
         this.image = image;
+        this.title = title;
     }
 
     public String getImage() {
@@ -21,5 +24,21 @@ public class GifGridItem {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

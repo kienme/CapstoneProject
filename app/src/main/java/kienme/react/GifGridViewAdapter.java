@@ -68,6 +68,7 @@ public class GifGridViewAdapter extends ArrayAdapter<GifGridItem> {
                     GifDetailFragment fragment = new GifDetailFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("image", item.getImage());
+                    bundle.putString("title", item.getTitle());
                     fragment.setArguments(bundle);
                     fragmentManager.beginTransaction()
                             .replace(R.id.gif_detail_container, fragment)
@@ -76,6 +77,7 @@ public class GifGridViewAdapter extends ArrayAdapter<GifGridItem> {
                 else {
                     Intent startDetailsActivity = new Intent(context, GifDetailActivity.class);
                     startDetailsActivity.putExtra("image", item.getImage());
+                    startDetailsActivity.putExtra("title", item.getTitle());
                     context.startActivity(startDetailsActivity);
                 }
             }

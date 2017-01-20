@@ -1,0 +1,137 @@
+package kienme.react.content;
+
+import android.content.ContentProvider;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
+import android.support.annotation.Nullable;
+
+/**
+ * Created by ravikiran on 20/1/17.
+ *
+ */
+
+public class FavouritesProvider extends ContentProvider {
+
+	private DBHelper dbHelper;
+
+	private static final int FAVOURITES = 1;
+	private static final int FAVOURITE_ID = 2;
+	private static final String AUTHORITY = "kienme.react.content.contentprovider"
+	private static final String BASE_PATH = "favourites"
+
+	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
+    public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/favourites";
+    public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/favourite";
+
+    private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+    static {
+            sURIMatcher.addURI(AUTHORITY, BASE_PATH, FAVOURITES);
+            sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", FAVOURITE_ID);
+    }
+
+    @Override
+    public boolean onCreate() {
+		dbHelper = new DBHelper(getContext());
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public Cursor query(Uri uri, String[] strings, String s, String[] strings1, String s1) {
+        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+
+        //checkColumns(projection);
+
+        queryBuilder.setTables(DBHelper.TBL_NAME));
+
+        int uriType = sURIMatcher.match(uri);
+        switch (uriType) {
+        case FAVOURITES:
+                break;
+        case FAVOURITE_ID:
+                queryBuilder.appendWhere(DBHelper.COL_ID + "=" + uri.getLastPathSegment());
+                break;
+        default:
+                throw new IllegalArgumentException("Unknown URI: " + uri);
+        }
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Cursor cursor = queryBuilder.query(db, strings, s,
+                        strings1, null, null, s1);
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+        return cursor;
+    }
+
+    @Nullable
+    @Override
+    public String getType(Uri uri) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public Uri insert(Uri uri, ContentValues contentValues) {
+        int uriType = sURIMatcher.match(uri);
+        SQLiteDatabase sqlDB = database.getWritableDatabase();
+        long id = 0;
+        switch (uriType) {
+        case FAVOURITES:
+                id = sqlDB.insert(dbhELPER.Tbl_name, null, contentValues);
+                break;
+        default:
+                throw new IllegalArgumentException("Unknown URI: " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return Uri.parse(BASE_PATH + "/" + id);
+    }
+
+    @Override
+    public int delete(Uri uri, String s, String[] strings) {
+        int uriType = sURIMatcher.match(uri);
+        SQLiteDatabase sqlDB = database.getWritableDatabase();
+        int rowsDeleted = 0;
+        switch (uriType) {
+        case FAVOURITES:
+                rowsDeleted = sqlDB.delete(DBHelper.TBL_NAME, s, strings);
+                break;
+        case FAVOURITE_ID:
+                String id = uri.getLastPathSegment();
+                if (TextUtils.isEmpty(s)) {
+                    rowsDeleted = sqlDB.delete( DBHelper.TBL_NAME, DBHelper.COL_ID + "=" + id, null);
+                } else {
+                    rowsDeleted = sqlDB.delete( DBHelper.TBL_NAME, DBHelper.COL_ID + "=" + id + " and " + s, strings);
+                }
+                break;
+        default:
+                throw new IllegalArgumentException("Unknown URI: " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return rowsDeleted;
+    }
+
+    @Override
+    public int update(Uri uri, ContentValues contentValues, String s, String[] strings) {
+        int uriType = sURIMatcher.match(uri);
+        SQLiteDatabase sqlDB = database.getWritableDatabase();
+        int rowsUpdated = 0;
+        switch (uriType) {
+        case FAVOURITES:
+            rowsUpdated = sqlDB.update(TodoTable.TABLE_TODO, contentValues, s, strings);
+                break;
+        case FAVOURITE_ID:
+            String id = uri.getLastPathSegment();
+            if (TextUtils.isEmpty(selection)) {
+                rowsUpdated = sqlDB.update(DBHelper.TBL_NAME, contentValues, DBHelper.COL_ID + "=" + id, null);
+            } else {
+                rowsUpdated = sqlDB.update(DBHelper.TBL_NAME, contentValues, DBHelper.COL_ID + "=" + id + " and " + s, strings);
+            }
+            break;
+        default:
+                throw new IllegalArgumentException("Unknown URI: " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return rowsUpdated;
+    }
+}

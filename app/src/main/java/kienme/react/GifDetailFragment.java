@@ -102,6 +102,7 @@ public class GifDetailFragment extends Fragment {
         Bundle data;
         final Activity activity = getActivity();
         final Context context = getContext();
+        final CollapsingToolbarLayout layout;
         ImageButton shareButton = null;
 
         if(GifListActivity.mTwoPane) {
@@ -110,6 +111,8 @@ public class GifDetailFragment extends Fragment {
         else {
             data = activity.getIntent().getExtras();
             shareButton = (ImageButton) activity.findViewById(R.id.share_button);
+            layout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+            layout.setTitle(data.getString("title"));
         }
 
         image = data.getString("image");

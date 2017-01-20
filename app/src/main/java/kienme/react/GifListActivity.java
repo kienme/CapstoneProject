@@ -42,6 +42,8 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
     GridView gridView;
     static Context context;
 
+    String searchTerm = "";
+
     String TAG = "GifListActivity";
 
     @Override
@@ -75,7 +77,7 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
             public void onClick(View view) {
                 String text = searchBar.getText().toString();
                 if (text.length() != 0) {
-                    String searchTerm = "";
+                    searchTerm = "";
 
                     if(directSearch)
                         searchTerm = text.replace(" ", "+");
@@ -108,7 +110,7 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
             ArrayList<String> gifsList = resultData.getStringArrayList(GiphyServiceReceiver.GIFS_LIST_KEY);
 
             for (String gif : gifsList)
-                gridData.add(new GifGridItem(gif));
+                gridData.add(new GifGridItem(gif, searchTerm));
 
             gifGridViewAdapter = new GifGridViewAdapter(this, R.layout.gif_list_content, gridData, getSupportFragmentManager());
             gifGridViewAdapter.setGridData(gridData);

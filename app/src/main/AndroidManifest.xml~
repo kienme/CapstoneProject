@@ -32,15 +32,9 @@
                 android:value="kienme.react.GifListActivity" />
         </activity>
 
-		<provider
-      		android:name="kienme.react.content.FavouritesProvider"
-      		android:authorities="kienme.react.content.contentprovider" >
-   		</provider>
-
         <service
             android:name=".giphy.GiphyIntentService"
-            android:exported="false">
-		</service>
+            android:exported="false"></service>
     </application>
 
 </manifest>
