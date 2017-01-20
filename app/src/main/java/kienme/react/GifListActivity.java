@@ -150,7 +150,7 @@ public class GifListActivity extends AppCompatActivity
     }
 
     public void onFavTabSelected() {
-        Toast.makeText(getBaseContext(), "Favs yo", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getBaseContext(), "Favs yo", Toast.LENGTH_SHORT).show();
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
     }
 

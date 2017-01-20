@@ -2,9 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="kienme.react">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -32,15 +33,29 @@
                 android:value="kienme.react.GifListActivity" />
         </activity>
 
-		<provider
-      		android:name="kienme.react.content.FavouritesProvider"
-      		android:authorities="kienme.react.content.contentprovider" >
-   		</provider>
+        <provider
+            android:name=".content.FavouritesProvider"
+            android:authorities="kienme.react.content.contentprovider" />
 
         <service
             android:name=".giphy.GiphyIntentService"
-            android:exported="false">
-		</service>
+            android:exported="false" />
+
+        <service
+            android:name=".widget.FavWidgetService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+        <receiver android:name=".widget.FavGifsWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/fav_gifs_widget_info" />
+        </receiver>
     </application>
 
 </manifest>
