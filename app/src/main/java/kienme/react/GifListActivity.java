@@ -1,6 +1,7 @@
 package kienme.react;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,6 +47,8 @@ public class GifListActivity extends AppCompatActivity
      */
     public static boolean mTwoPane;
 
+    final int NUM_RESULTS = 3;
+
     boolean directSearch = true;
 
     GifGridViewAdapter gifGridViewAdapter;
@@ -64,9 +68,27 @@ public class GifListActivity extends AppCompatActivity
 
         context = this;
         gridView = (GridView) findViewById(R.id.gif_list);
+        final EditText searchBar = (EditText) findViewById(R.id.search_bar);
 
         final GiphyServiceReceiver receiver = new GiphyServiceReceiver(new Handler());
         receiver.setListener(this);
+
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+        String sharedText;
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
+                sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+
+                if (sharedText != null) {
+                    searchTerm = EmotionDetector.getEmotionKeyword(sharedText);
+                    searchBar.setText(searchTerm);
+                    GiphyIntentService.startActionFetch(context, receiver, searchTerm, NUM_RESULTS);
+                }
+            }
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -81,7 +103,6 @@ public class GifListActivity extends AppCompatActivity
             }
         });
 
-        final EditText searchBar = (EditText) findViewById(R.id.search_bar);
         ImageButton searchButton = (ImageButton) findViewById(R.id.seach_btn);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +116,7 @@ public class GifListActivity extends AppCompatActivity
                     else
                         searchTerm = EmotionDetector.getEmotionKeyword(text);
 
-                    GiphyIntentService.startActionFetch(context, receiver, searchTerm, 2);
+                    GiphyIntentService.startActionFetch(context, receiver, searchTerm, NUM_RESULTS);
                 }
             }
         });
