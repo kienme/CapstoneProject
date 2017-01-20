@@ -1,33 +1,24 @@
 package kienme.react;
 
 import android.content.Context;
-import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import kienme.react.giphy.GiphyIntentService;
 import kienme.react.giphy.GiphyServiceReceiver;
 import kienme.react.synesketch.EmotionDetector;
-import synesketch.emotion.Emotion;
-import synesketch.emotion.EmotionalState;
-import synesketch.emotion.Empathyscope;
 
 /**
  * An activity representing a list of Gifs. This activity
@@ -43,7 +34,7 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
-    static boolean mTwoPane;
+    public static boolean mTwoPane;
 
     boolean directSearch = true;
 
@@ -91,7 +82,7 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
                     else
                         searchTerm = EmotionDetector.getEmotionKeyword(text);
 
-                    GiphyIntentService.startActionFetch(context, receiver, searchTerm, 20);
+                    GiphyIntentService.startActionFetch(context, receiver, searchTerm, 2);
                 }
             }
         });
@@ -136,6 +127,9 @@ public class GifListActivity extends AppCompatActivity implements GiphyServiceRe
         switch (item.getItemId()) {
             case R.id.direct_check:
                 item.setChecked(directSearch = !item.isChecked());
+                return true;
+
+            case R.id.favourites:
                 return true;
         }
         return super.onOptionsItemSelected(item);

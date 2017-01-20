@@ -53,11 +53,7 @@ public class GifDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(GifDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(GifDetailFragment.ARG_ITEM_ID));
             GifDetailFragment fragment = new GifDetailFragment();
-            fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.gif_detail_container, fragment)
                     .commit();
