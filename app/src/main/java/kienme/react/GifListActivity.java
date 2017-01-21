@@ -1,5 +1,6 @@
 package kienme.react;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,6 +22,13 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 
@@ -47,7 +55,7 @@ public class GifListActivity extends AppCompatActivity
      */
     public static boolean mTwoPane;
 
-    final int NUM_RESULTS = 3;
+    final int NUM_RESULTS = 20;
 
     boolean directSearch = true;
 
@@ -61,10 +69,18 @@ public class GifListActivity extends AppCompatActivity
 
     String TAG = "GifListActivity";
 
+    private AdView mAdView;
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gif_list);
+
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("D0B78A2B855A84057AB1FEE1893EDC38").build();
+        mAdView.loadAd(adRequest);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         context = this;
         gridView = (GridView) findViewById(R.id.gif_list);
@@ -94,19 +110,11 @@ public class GifListActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         ImageButton searchButton = (ImageButton) findViewById(R.id.seach_btn);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String text = searchBar.getText().toString();
                 if (text.length() != 0) {
                     searchTerm = "";
@@ -118,6 +126,12 @@ public class GifListActivity extends AppCompatActivity
 
                     GiphyIntentService.startActionFetch(context, receiver, searchTerm, NUM_RESULTS);
                 }
+
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "SEARCH_TEXT");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, searchTerm);
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "text");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
             }
         });
 
@@ -133,6 +147,11 @@ public class GifListActivity extends AppCompatActivity
 
 
         //GiphyIntentService.startActionFetch(this, receiver, "silicon+valley", 20);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
