@@ -46,7 +46,8 @@
         android:layout_height="wrap_content"
         android:src="@android:drawable/ic_menu_share"
         android:layout_gravity="bottom"
-        android:id="@+id/share_button"/>
+        android:id="@+id/share_button"
+        android:contentDescription="@string/cd_share"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -56,6 +57,7 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@+id/gif_detail_container"
         app:layout_anchorGravity="top|end"
-        app:srcCompat="@android:drawable/btn_star_big_off" />
+        app:srcCompat="@android:drawable/btn_star_big_off"
+        android:contentDescription="@string/cd_star"/>
 
 </android.support.design.widget.CoordinatorLayout>

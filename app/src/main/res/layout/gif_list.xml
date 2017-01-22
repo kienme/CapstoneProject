@@ -10,4 +10,5 @@
     android:id="@+id/gif_list"
     app:layoutManager="LinearLayoutManager"
     android:name="kienme.react.GifListFragment"
-    tools:context="kienme.react.GifListActivity"/>
+    tools:context="kienme.react.GifListActivity"
+    android:contentDescription="@string/cd_gif_list"/>

@@ -5,4 +5,5 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="@dimen/image_view_padding"
-    tools:context="kienme.react.GifDetailFragment" />
+    tools:context="kienme.react.GifDetailFragment"
+    android:contentDescription="@string/cd_gif"/>
