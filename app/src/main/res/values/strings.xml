@@ -3,5 +3,8 @@
     <string name="title_gif_detail">Gif Detail</string>
     <string name="appwidget_text">EXAMPLE_TEXT</string>
     <string name="add_widget">Add widget</string>
+    <string name="empty_widget_text">Favourite gifs here</string>
+    <string name="gif_download_desc">Downloading gif...</string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="test_device_id">D0B78A2B855A84057AB1FEE1893EDC38</string>
 </resources>

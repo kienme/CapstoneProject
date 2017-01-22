@@ -151,8 +151,8 @@ public class GifDetailFragment extends Fragment {
 
         Log.d(TAG, "downloadFile()");
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-        request.setTitle("ReacT");
-        request.setDescription("Downloading gif...");
+        request.setTitle(getResources().getString(R.string.app_name));
+        request.setDescription(getResources().getString(R.string.gif_download_desc));
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "sample.gif");

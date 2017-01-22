@@ -78,7 +78,7 @@ public class GifListActivity extends AppCompatActivity
         setContentView(R.layout.activity_gif_list);
 
         mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("D0B78A2B855A84057AB1FEE1893EDC38").build();
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice(getResources().getString(R.string.test_device_id)).build();
         mAdView.loadAd(adRequest);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 

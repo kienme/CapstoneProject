@@ -42,13 +42,13 @@
             <EditText
                 android:id="@+id/search_bar"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/search_bar_height"
                 android:hint="Search..."
                 android:layout_weight="1"/>
             <ImageButton
                 android:id="@+id/seach_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/search_bar_height"
                 android:src="@android:drawable/ic_search_category_default"/>
         </LinearLayout>
 
