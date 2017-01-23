@@ -208,10 +208,9 @@ public class GifListActivity extends AppCompatActivity
             data.moveToNext();
         }
 
-        if(gifGridViewAdapter == null)
-            gifGridViewAdapter = new GifGridViewAdapter(this, R.layout.gif_list_content, favGifs, getSupportFragmentManager());
-            gifGridViewAdapter.setGridData(favGifs);
-            gridView.setAdapter(gifGridViewAdapter);
+        gifGridViewAdapter = new GifGridViewAdapter(this, R.layout.gif_list_content, favGifs, getSupportFragmentManager());
+        gifGridViewAdapter.setGridData(favGifs);
+        gridView.setAdapter(gifGridViewAdapter);
     }
 
     @Override
