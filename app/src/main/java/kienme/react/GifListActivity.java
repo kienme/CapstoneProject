@@ -55,7 +55,7 @@ public class GifListActivity extends AppCompatActivity
      */
     public static boolean mTwoPane;
 
-    final int NUM_RESULTS = 20;
+    final int NUM_RESULTS = 2;
 
     boolean directSearch = true;
 

@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -104,13 +105,14 @@ public class GifDetailFragment extends Fragment {
         final Context context = getContext();
         final CollapsingToolbarLayout layout;
         ImageButton shareButton = null;
+        shareButton = (ImageButton) activity.findViewById(R.id.share_button);
 
         if(GifListActivity.mTwoPane) {
             data = getArguments();
         }
         else {
             data = activity.getIntent().getExtras();
-            shareButton = (ImageButton) activity.findViewById(R.id.share_button);
+            //shareButton = (ImageButton) activity.findViewById(R.id.share_button);
             layout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             layout.setTitle(data.getString("title"));
         }
@@ -118,6 +120,9 @@ public class GifDetailFragment extends Fragment {
         image = data.getString("image");
         ImageView imageView = (ImageView) activity.findViewById(R.id.gif_detail_image);
         Glide.with(context).load(image).into(imageView);
+        /*TextView rnd = (TextView) activity.findViewById(R.id.rnd_tv);
+        rnd.setText(image);*/
+        Log.d(TAG, "Loading image");
 
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
