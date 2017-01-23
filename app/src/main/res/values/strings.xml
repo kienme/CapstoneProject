@@ -13,4 +13,7 @@
     <string name="cd_search_btn">Click to search</string>
     <string name="cd_gif">GIF</string>
     <string name="cd_gif_list">List of GIFs</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_direct_searh">Direct search</string>
+    <string name="menu_fav">Favourites</string>
 </resources>

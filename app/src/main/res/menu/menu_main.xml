@@ -5,7 +5,7 @@
     tools:context=".GifListActivity">
     <item
         android:id="@+id/direct_check"
-        android:title="Direct search"
+        android:title="@string/menu_direct_searh"
         android:checkable="true"
         android:checked="true"/>
     <group
@@ -13,7 +13,7 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/favourites"
-            android:title="Favourites"
+            android:title="@string/menu_fav"
             app:showAsAction="never"
             android:checkable="false"/>
     </group>
